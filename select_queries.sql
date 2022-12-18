@@ -18,11 +18,11 @@ SELECT hw.singer.name, hw.album.name, hw.album.release_year FROM hw.singer, hw.a
 select hw.singer.name, hw.sbornik.name from hw.singer, hw.sbornik where hw.singer.name ilike '%Dabro%' ;
 
 /* 6 */
-SELECT album.name, singer.genre_id, count(singer.genre_id)  FROM album JOIN singer ON singer.singer_id = album.singer_id
+SELECT singer.genre_id, COUNT(*) FROM album join singer on singer.singer_id = album.singer_id
 JOIN genre ON singer.genre_id = genre.genre_id
-GROUP BY singer.genre_id, album.name
-HAVING COUNT (singer.genre_id) > 1
-ORDER BY singer.genre_id DESC; ; /* что-то не так, .. */
+GROUP BY singer.genre_id
+HAVING COUNT(*) > 1
+ORDER BY COUNT(*) DESC; ; /* что-то не так, не получается вывести названия альбомов, dbeaver просит его добавить в агр фун-ию, но тогда всё группировка ломается */
 
 /* 7 */
 select name from song where song_id not in(select song_id from sbornik);
