@@ -18,12 +18,11 @@ SELECT hw.singer.name, hw.album.name, hw.album.release_year FROM hw.singer, hw.a
 select hw.singer.name, hw.sbornik.name from hw.singer, hw.sbornik where hw.singer.name ilike '%Dabro%' ;
 
 /* 6 */
-SELECT name 
-   FROM album WHERE album_id IN(SELECT 
-   name FROM singer 
-   WHERE singer_id IN(SELECT 
-   genre_id FROM genre
-   group by genre_id having count(genre_id) > 1)); /* что-то не так.. */
+SELECT album.name, singer.genre_id, count(singer.genre_id)  FROM album JOIN singer ON singer.singer_id = album.singer_id
+JOIN genre ON singer.genre_id = genre.genre_id
+GROUP BY singer.genre_id, album.name
+HAVING COUNT (singer.genre_id) > 1
+ORDER BY singer.genre_id DESC; ; /* что-то не так, .. */
 
 /* 7 */
 select name from song where song_id not in(select song_id from sbornik);
