@@ -13,11 +13,13 @@ select album_id, AVG(lenght) from tets.song
 group by album_id
 order by album_id;
 
-/* 4 */
-select * from tets.singer s
+/* 4 updated */
+select distinct s.name, a.release_year from tets.singer s
 join tets.albumsinger al on s.singer_id = al.singer_id
 join tets.album a on a.album_id = al.album_id
-where a.release_year != 2020; /* а почему "кто выпустил хоть что-то", когда я беру год выпуска альбома из таблицы и пишу, что он не равен 2020?, у меня в таблице нет информации по выпуску песен, чтобы они попали в скоуп */
+where a.release_year not in (select distinct a.release_year from tets.singer s
+join tets.albumsinger al on s.singer_id = al.singer_id
+join tets.album a on a.album_id = al.album_id where a.release_year = 2020); 
 
 /* 5 */
 select * from tets.singer s
@@ -47,9 +49,10 @@ join tets.album a on a.album_id = al.album_id
 join tets.song so on so.album_id = al.album_id
 where so.lenght = (select MIN(tets.song.lenght) from tets.song);
 
-/* 9 */
+/* 9 updated */
 select al.name, count(so.name) from tets.album al
 join tets.song so on al.album_id = so.album_id
 group by al.name
-order by count(so.name) asc
-limit 1;
+having count(so.name) = (select count(so.name) from tets.album al
+join tets.song so on al.album_id = so.album_id
+group by al.name order by count(so.name) asc limit 1);
